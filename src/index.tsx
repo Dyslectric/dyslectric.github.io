@@ -8,7 +8,7 @@ export const LandingPage: FC<{}> = () => {
   // by screens
   const [scroll, setScroll] = useState(window.scrollY);
 
-  const landingNavAnimation = scroll < 1 ? scroll : 1;
+  const landingNavAnimation = scroll < 0.1 ? scroll * 10 : 1;
   const leftPadding = 14 - 13 * landingNavAnimation;
   const imgSize = 20 - 18 * landingNavAnimation;
   const boxHeight = 100 - 92 * landingNavAnimation;
@@ -70,7 +70,7 @@ export const LandingPage: FC<{}> = () => {
       <div
         style={{
           width: "100vw",
-          height: `${100 + 8 * landingNavAnimation}vh`,
+          height: `${100 - 75 * landingNavAnimation}vh`,
           //backgroundColor: "#000000",
         }}
       ></div>
