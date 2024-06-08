@@ -1,7 +1,7 @@
 import { Stage, useApp } from "@pixi/react";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { SpaceView } from "./components/SpaceView/SpaceView";
-import { Viewport as SpaceViewport } from "./components/Viewport.jsx";
+import { Viewport as SpaceViewport } from "./components/Viewport.tsx";
 
 export interface LandingPageBgProps {
   height: number;
