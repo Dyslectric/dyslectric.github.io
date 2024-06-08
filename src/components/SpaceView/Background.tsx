@@ -13,12 +13,13 @@ import STARFIELD from "./assets/bgs/1024/Starfields/Starfield_02-1024x1024.png";
 
 import NEBULA_1 from "./assets/bgs/1024/Purple Nebula/Purple_Nebula_01-1024x1024.png";
 import NEBULA_2 from "./assets/bgs/1024/Blue Nebula/Blue_Nebula_04-1024x1024.png";
-import NEBULA_3 from "./assets/bgs/1024/Green Nebula/Green_Nebula_04-1024x1024.png";
+import NEBULA_3 from "./assets/bgs/1024/Purple Nebula/Purple_Nebula_07-1024x1024.png";
+//import NEBULA_3 from "./assets/bgs/1024/Green Nebula/Green_Nebula_04-1024x1024.png";
 import NEBULA_4 from "./assets/bgs/1024/Green Nebula/Green_Nebula_07-1024x1024.png";
 
 import NEBULA_MASK_1 from "./assets/masks/nebulamask3.png";
 import NEBULA_MASK_2 from "./assets/masks/nebulamask7.png";
-import NEBULA_MASK_3 from "./assets/masks/nebulamask4.png";
+import NEBULA_MASK_3 from "./assets/masks/pnoise1.png";
 import NEBULA_MASK_4 from "./assets/masks/nebulamask2.png";
 
 export interface SpaceBackgroundLayerProps {
@@ -72,8 +73,8 @@ export const SpaceBackgroundLayer: FC<SpaceBackgroundLayerProps> = ({
 
   useEffect(() => {
     document.addEventListener("mousemove", (event) => {
-      camera.setX(event.clientX * 5);
-      camera.setY(event.clientY * 5);
+      camera.setX(event.clientX * 3);
+      camera.setY(event.clientY * 3);
     });
   }, []);
 
@@ -133,25 +134,25 @@ export const Background = () => {
   const nebulas = [
     {
       texture: Texture.from(NEBULA_1),
-      z: -32,
+      z: -16,
       mask: Texture.from(NEBULA_MASK_1),
-      maskScale: 200,
+      maskScale: 144,
     },
     {
       texture: Texture.from(NEBULA_2),
-      z: -18,
+      z: -12,
       mask: Texture.from(NEBULA_MASK_2),
       maskScale: 144,
     },
     {
       texture: Texture.from(NEBULA_3),
-      z: -12,
+      z: -8,
       mask: Texture.from(NEBULA_MASK_3),
-      maskScale: 128 + 4,
+      maskScale: 128,
     },
     {
       texture: Texture.from(NEBULA_4),
-      z: -8,
+      z: -4,
       mask: Texture.from(NEBULA_MASK_4),
       maskScale: 128,
     },
@@ -172,7 +173,7 @@ export const Background = () => {
           z={nebula.z}
           mask={nebula.mask}
           maskScale={nebula.maskScale}
-          scale={8.0}
+          scale={4.0}
         />
       ))}
     </>
