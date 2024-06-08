@@ -10,7 +10,7 @@ export const LandingPage: FC<{}> = () => {
 
   const landingNavAnimation = scroll < 1 ? scroll : 1;
   const leftPadding = 14 - 13 * landingNavAnimation;
-  const imgSize = 25 - 22 * landingNavAnimation;
+  const imgSize = 20 - 18 * landingNavAnimation;
   const boxHeight = 100 - 92 * landingNavAnimation;
   const textSize = 3 - 2 * landingNavAnimation;
   const textLeftMargin = 5 - 4.3 * landingNavAnimation;
@@ -25,8 +25,8 @@ export const LandingPage: FC<{}> = () => {
 
   return (
     <>
-      <div style={{ position: "fixed" }}>
-        <LandingPageBg height={(boxHeight / 100) * window.innerHeight} />
+      <div style={{ position: "fixed", zIndex: -1 }}>
+        <LandingPageBg height={window.innerHeight} />
       </div>
       <div
         style={{
@@ -36,6 +36,7 @@ export const LandingPage: FC<{}> = () => {
           alignSelf: "center",
           height: `${boxHeight}vh`,
           width: `100vw`,
+          backgroundColor: `rgba(0, 0, 0, ${landingNavAnimation})`,
         }}
       >
         <img

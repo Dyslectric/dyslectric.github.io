@@ -4,7 +4,7 @@ import {
   useApp,
 } from "@pixi/react";
 import { BLEND_MODES, Container, Sprite, Texture } from "pixi.js";
-import { FC, useContext, useEffect, useMemo } from "react";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { CameraContext } from "../Camera";
 import { ViewportContext } from "../Viewport";
 import { SpaceViewContext } from "./SpaceView";
@@ -71,12 +71,20 @@ export const SpaceBackgroundLayer: FC<SpaceBackgroundLayerProps> = ({
     }
   }, [maskSprite, camera.x, camera.y, distance, z, camera.zoom]);
 
+  const [mouseX, setMouseX] = useState(0);
+  const [mouseY, setMouseY] = useState(0);
+
   useEffect(() => {
     document.addEventListener("mousemove", (event) => {
-      camera.setX(event.clientX * 3);
-      camera.setY(event.clientY * 3);
+      setMouseX(event.clientX);
+      setMouseY(event.clientY);
     });
   }, []);
+
+  useEffect(() => {
+    camera.setY(100 + mouseY * 3 + window.scrollY * 3);
+    camera.setX(100 + mouseX * 3);
+  }, [mouseX, mouseY, window.scrollY]);
 
   return (
     <ContainerComponent x={viewport.width / 2} y={viewport.height / 2}>
