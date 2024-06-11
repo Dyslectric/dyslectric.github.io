@@ -2,17 +2,19 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import owlEyeSvg from "./owleye.svg";
 import "./styles.css";
+import "./index.css";
+import "./assets/orbital-ace-landing-image.png";
 import { LandingPageBg } from "./LandingPageBg";
 
 export const LandingPage: FC<{}> = () => {
   // by screens
   const [scroll, setScroll] = useState(window.scrollY);
 
-  const landingNavAnimation = scroll < 0.90 ? scroll / 0.90: 1;
+  const landingNavAnimation = scroll < 0.93 ? scroll / 0.93 : 1;
   const leftPadding = 14 - 13 * landingNavAnimation;
-  const imgSize = 20 - 18 * landingNavAnimation;
-  const boxHeight = 100 - 90 * landingNavAnimation;
-  const textSize = 3 - 2 * landingNavAnimation;
+  const imgSize = 20 - 17 * landingNavAnimation;
+  const boxHeight = 100 - 93 * landingNavAnimation;
+  const textSize = 3 - 1.75 * landingNavAnimation;
   const textLeftMargin = 5 - 4.3 * landingNavAnimation;
 
   const onScroll = useCallback(() => {
@@ -25,12 +27,25 @@ export const LandingPage: FC<{}> = () => {
 
   return (
     <>
-	  <div style={{
-		  position: "fixed", zIndex: -1, backgroundColor: "rgb(30, 30, 30)",
-		  height: window.innerHeight, width: window.innerWidth, opacity: (0.8 * landingNavAnimation)
-	  }}/>
-      <div style={{ position: "fixed", zIndex: -2, filter: `blur(${12 * landingNavAnimation}px)` }}>
-	    <LandingPageBg height={window.innerHeight} />
+      <div
+        style={{
+          position: "fixed",
+          zIndex: -1,
+          backgroundColor: "rgb(30, 30, 30)",
+          height: `${100 - boxHeight}vh`,
+          bottom: 0,
+          width: window.innerWidth,
+          opacity: 0.7,
+        }}
+      />
+      <div
+        style={{
+          position: "fixed",
+          zIndex: -2,
+          filter: `blur(${8 * landingNavAnimation}px)`,
+        }}
+      >
+        <LandingPageBg height={window.innerHeight} />
       </div>
       <div
         style={{
