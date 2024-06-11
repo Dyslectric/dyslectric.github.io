@@ -39,22 +39,23 @@ h1 {
 	}
 
 	.articles-area {
-		overflow: clip;
-		white-space: nowrap;
 		padding-top: 6vw;
-		padding-right: 6vw;
+	}
+
+	.article-carousel {
+		padding-top: 6vw;
+		align-items: center;
+		display: flex;
 	}
 
 	.article {
 		display: inline-block;
-		padding-left: 6vw;
-		width: 6in;
 	}
 
 	.article-image {
 		object-fit: cover;
-		width: 6in;
-		height: 2.8in;
+		width: 25.5vw;
+		height: 12vw;
 		border-radius: 0.3in 0.3in 0in 0in;
 	}
 
@@ -62,16 +63,44 @@ h1 {
 		background-color: #101010;
 		opacity: 1.0;
 		top: 2.8in;
-		height: 2.5in;
+		height: 2.3in;
 		border-radius: 0in 0in 0.3in 0.3in;
 	}
 
-	#article-title {
+	.article-carousel-controls {
+		display: flex;
+		justify-content: space-between;
+		width: 100vw;
+		position: absolute;
+		z-index: 1;
+		padding-left: 1.5vw;
+		padding-right: 1.5vw;
+	}
+
+	.article-carousel-inner {
+		scroll-behavior: smooth;
+		display: grid;
+		position: relative;
+		grid-gap: 6vw;
+		padding-left: 6vw;
+		padding-right: 6vw;
+		grid-template-columns: repeat(auto-fill,25.5vw);
+		grid-auto-flow: column;
+		grid-auto-columns: 25.5vw;
+		overflow-x: auto;
+	}
+
+	.article-title {
 		@apply text-wrap text-2xl;
 	}
 
-	#article-desc {
+	.article-description {
 		@apply text-wrap text-lg;
+		padding-top: 0;
+	}
+
+	.carousel-nav-arrow {
+		width: 3vw;
 	}
 
 }

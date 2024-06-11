@@ -4,6 +4,8 @@ import owlEyeSvg from "./owleye.svg";
 import "./styles.css";
 import "./index.css";
 import "./assets/orbital-ace-landing-image.png";
+import navArrowLeftSvg from "./assets/nav-arrow-left.svg";
+import navArrowRightSvg from "./assets/nav-arrow-right.svg";
 import { LandingPageBg } from "./LandingPageBg";
 
 export const LandingPage: FC<{}> = () => {
@@ -97,8 +99,97 @@ export const LandingPage: FC<{}> = () => {
   );
 };
 
+export interface ArticleCarouselProps {
+  id: string;
+}
+
+export const ArticleCarousel: FC<ArticleCarouselProps> = ({ id }) => {
+  const element = document.getElementById(id);
+  const children = element ? [...element.children] : [];
+  const carouselId = `${id}-carousel`;
+
+  useEffect(() => {
+    if (element) element.style.setProperty("display", "none");
+  });
+
+  const scrollLeft = useCallback(() => {
+    const element = document.querySelector(
+      `#${carouselId} .article-carousel-inner`,
+    );
+    if (element)
+      element.scrollTo(
+        element.scrollLeft - (33 / 100) * window.innerWidth,
+        element.scrollTop,
+      );
+  }, []);
+  const scrollRight = useCallback(() => {
+    const element = document.querySelector(
+      `#${carouselId} .article-carousel-inner`,
+    );
+    if (element)
+      element.scrollTo(
+        element.scrollLeft + (33 / 100) * window.innerWidth,
+        element.scrollTop,
+      );
+  }, []);
+
+  return (
+    <>
+      <div id={carouselId} className="article-carousel">
+        <div className="article-carousel-controls">
+          <img
+            src={navArrowLeftSvg}
+            className="carousel-nav-arrow"
+            onMouseDown={scrollLeft}
+          />
+          <img
+            src={navArrowRightSvg}
+            className="carousel-nav-arrow"
+            onMouseDown={scrollRight}
+          />
+        </div>
+        <div className="article-carousel-inner">
+          {children.map((child, index) => {
+            const image = child.getElementsByTagName("img").item(0);
+            const title = child.getElementsByTagName("h1").item(0);
+            const description = child.getElementsByTagName("p").item(0);
+            const imageSrc = image ? image.getAttribute("src") : undefined;
+
+            return (
+              <div key={index} className="article">
+                <img
+                  className="article-image"
+                  src={imageSrc ? imageSrc : undefined}
+                />
+                <div className="article-textbox">
+                  <h1 className="article-title">
+                    {title ? title.innerText : ""}
+                  </h1>
+                  <p className="article-description">
+                    {description ? description.innerText : ""}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+};
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <LandingPage />
   </React.StrictMode>,
 );
+
+ReactDOM.createRoot(
+  document.getElementById("orbital-ace-article-carousel")!,
+).render(
+  <React.StrictMode>
+    <ArticleCarousel id={"orbital-ace-articles"} />
+  </React.StrictMode>,
+);
+
+//const orbAceArticlesDiv = document.getElementById("orbital-ace-articles-area");
