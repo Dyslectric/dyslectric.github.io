@@ -4,8 +4,9 @@ import owlEyeSvg from "./owleye.svg";
 import "./styles.css";
 import "./index.css";
 import "./assets/orbital-ace-landing-image.png";
-import navArrowLeftSvg from "./assets/nav-arrow-left.svg";
-import navArrowRightSvg from "./assets/nav-arrow-right.svg";
+import navArrowLeftSvg from "./assets/stroked-nav-left.svg";
+import navArrowRightSvg from "./assets/stroked-nav-right.svg";
+import rocketSvg from "./assets/rocket.svg";
 import { LandingPageBg } from "./LandingPageBg";
 
 export const LandingPage: FC<{}> = () => {
@@ -13,15 +14,25 @@ export const LandingPage: FC<{}> = () => {
   const [scroll, setScroll] = useState(window.scrollY);
 
   const landingNavAnimation = scroll < 0.93 ? scroll / 0.93 : 1;
-  const leftPadding = 14 - 13 * landingNavAnimation;
+  const leftPadding = 15 - 14 * landingNavAnimation;
   const imgSize = 20 - 17 * landingNavAnimation;
   const boxHeight = 100 - 93 * landingNavAnimation;
   const textSize = 3 - 1.75 * landingNavAnimation;
   const textLeftMargin = 5 - 4.3 * landingNavAnimation;
 
+  const [spaceModeOn, setSpaceModeOn] = useState(false);
+
   const onScroll = useCallback(() => {
     setScroll(window.scrollY / window.innerHeight);
   }, [window.innerHeight]);
+
+  const onRocketClick = useCallback(() => {
+    if (spaceModeOn) {
+      setSpaceModeOn(false);
+    } else {
+      setSpaceModeOn(true);
+    }
+  }, [spaceModeOn]);
 
   useEffect(() => {
     document.addEventListener("scroll", onScroll);
@@ -29,6 +40,17 @@ export const LandingPage: FC<{}> = () => {
 
   return (
     <>
+      <img
+        src={rocketSvg}
+        style={{
+          position: "fixed",
+          zIndex: 3,
+          width: "1vw",
+          top: "1vw",
+          right: "1vw",
+        }}
+        onMouseDown={onRocketClick}
+      />
       <div
         style={{
           position: "fixed",
@@ -37,7 +59,7 @@ export const LandingPage: FC<{}> = () => {
           height: `${100 - boxHeight}vh`,
           bottom: 0,
           width: window.innerWidth,
-          opacity: 0.7,
+          opacity: 0.3,
         }}
       />
       <div
@@ -47,17 +69,22 @@ export const LandingPage: FC<{}> = () => {
           filter: `blur(${8 * landingNavAnimation}px)`,
         }}
       >
-        <LandingPageBg height={window.innerHeight} />
+        {spaceModeOn ? (
+          <LandingPageBg height={window.innerHeight} />
+        ) : undefined}
       </div>
       <div
         style={{
           position: "fixed",
+          zIndex: 2,
           display: "flex",
           flexDirection: "row",
           alignSelf: "center",
           height: `${boxHeight}vh`,
           width: `100vw`,
-          backgroundColor: `rgba(0, 0, 0, ${landingNavAnimation})`,
+          backgroundColor: spaceModeOn
+            ? `rgba(0, 0, 0, ${landingNavAnimation})`
+            : "#101010",
         }}
       >
         <img
@@ -80,8 +107,8 @@ export const LandingPage: FC<{}> = () => {
             backgroundClip: "text",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
-            marginLeft: `${textLeftMargin}vw`,
-            //background,
+            margin: `${textLeftMargin}vw`,
+            padding: "1vw",
           }}
         >
           {" "}
@@ -116,27 +143,30 @@ export const ArticleCarousel: FC<ArticleCarouselProps> = ({ id }) => {
     const element = document.querySelector(
       `#${carouselId} .article-carousel-inner`,
     );
-    if (element)
-      element.scrollTo(
-        element.scrollLeft - (33 / 100) * window.innerWidth,
-        element.scrollTop,
-      );
+    if (element) element.scrollTo(element.scrollLeft - 460, element.scrollTop);
   }, []);
   const scrollRight = useCallback(() => {
     const element = document.querySelector(
       `#${carouselId} .article-carousel-inner`,
     );
-    if (element)
-      element.scrollTo(
-        element.scrollLeft + (33 / 100) * window.innerWidth,
-        element.scrollTop,
-      );
+    if (element) element.scrollTo(element.scrollLeft + 460, element.scrollTop);
   }, []);
 
   return (
     <>
-      <div id={carouselId} className="article-carousel">
-        <div className="article-carousel-controls">
+      <div id={carouselId} className="article-carousel" style={{}}>
+        <div
+          className="article-carousel-controls"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100vw",
+            position: "absolute",
+            zIndex: 1,
+            paddingLeft: "2vw",
+            paddingRight: "2vw",
+          }}
+        >
           <img
             src={navArrowLeftSvg}
             className="carousel-nav-arrow"
@@ -148,7 +178,22 @@ export const ArticleCarousel: FC<ArticleCarouselProps> = ({ id }) => {
             onMouseDown={scrollRight}
           />
         </div>
-        <div className="article-carousel-inner">
+        <div
+          className="article-carousel-inner"
+          style={{
+            scrollBehavior: "smooth",
+            display: "grid",
+            position: "relative",
+            gridGap: 60,
+            paddingLeft: "6vw",
+            paddingRight: "6vw",
+            gridTemplateColumns: "repeat(auto-fill,400px)",
+            gridAutoFlow: "column",
+            gridAutoColumns: 400,
+            overflowX: "hidden",
+            mask: "linear-gradient(to right, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2%, rgba(0,0,0,1) 6%, rgba(0,0,0, 1) 94%, rgba(0,0,0, 0) 98%)",
+          }}
+        >
           {children.map((child, index) => {
             const image = child.getElementsByTagName("img").item(0);
             const title = child.getElementsByTagName("h1").item(0);
@@ -156,16 +201,31 @@ export const ArticleCarousel: FC<ArticleCarouselProps> = ({ id }) => {
             const imageSrc = image ? image.getAttribute("src") : undefined;
 
             return (
-              <div key={index} className="article">
+              <div
+                key={index}
+                className="article"
+                style={{
+                  display: "inline-block",
+                }}
+              >
                 <img
                   className="article-image"
                   src={imageSrc ? imageSrc : undefined}
+                  style={{
+                    objectFit: "cover",
+                    width: 400,
+                    height: 230,
+                    borderRadius: "0.3in 0.3in 0in 0in",
+                  }}
                 />
                 <div className="article-textbox">
-                  <h1 className="article-title">
+                  <h1 className="article-title text-wrap text-2xl">
                     {title ? title.innerText : ""}
                   </h1>
-                  <p className="article-description">
+                  <p
+                    className="article-description text-wrap"
+                    style={{ paddingTop: 0 }}
+                  >
                     {description ? description.innerText : ""}
                   </p>
                 </div>
@@ -189,6 +249,14 @@ ReactDOM.createRoot(
 ).render(
   <React.StrictMode>
     <ArticleCarousel id={"orbital-ace-articles"} />
+  </React.StrictMode>,
+);
+
+ReactDOM.createRoot(
+  document.getElementById("ls-techs-article-carousel")!,
+).render(
+  <React.StrictMode>
+    <ArticleCarousel id={"ls-techs-articles"} />
   </React.StrictMode>,
 );
 

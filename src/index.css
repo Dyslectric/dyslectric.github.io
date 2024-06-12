@@ -48,17 +48,6 @@ h1 {
 		display: flex;
 	}
 
-	.article {
-		display: inline-block;
-	}
-
-	.article-image {
-		object-fit: cover;
-		width: 25.5vw;
-		height: 12vw;
-		border-radius: 0.3in 0.3in 0in 0in;
-	}
-
 	.article-textbox {
 		background-color: #101010;
 		opacity: 1.0;
@@ -67,40 +56,8 @@ h1 {
 		border-radius: 0in 0in 0.3in 0.3in;
 	}
 
-	.article-carousel-controls {
-		display: flex;
-		justify-content: space-between;
-		width: 100vw;
-		position: absolute;
-		z-index: 1;
-		padding-left: 1.5vw;
-		padding-right: 1.5vw;
-	}
-
-	.article-carousel-inner {
-		scroll-behavior: smooth;
-		display: grid;
-		position: relative;
-		grid-gap: 6vw;
-		padding-left: 6vw;
-		padding-right: 6vw;
-		grid-template-columns: repeat(auto-fill,25.5vw);
-		grid-auto-flow: column;
-		grid-auto-columns: 25.5vw;
-		overflow-x: auto;
-	}
-
-	.article-title {
-		@apply text-wrap text-2xl;
-	}
-
-	.article-description {
-		@apply text-wrap text-lg;
-		padding-top: 0;
-	}
-
 	.carousel-nav-arrow {
-		width: 3vw;
+		width: 2vw;
 	}
 
 }
