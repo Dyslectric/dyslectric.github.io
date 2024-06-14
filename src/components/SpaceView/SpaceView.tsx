@@ -29,43 +29,6 @@ export const SpaceView = () => {
     bottom: 32768,
   });
 
-  //const controlBoxPadding = {
-  //  horizontal: 95,
-  //  vertical: 55,
-  //};
-
-  //const controlBoxDimensions = {
-  //  width: 200 + 2 * controlBoxPadding.horizontal,
-  //  height: 200 + 2 * controlBoxPadding.vertical,
-  //};
-
-  //const controlBoxPosition = {
-  //  x: viewport.width - controlBoxDimensions.width,
-  //  y: viewport.height - controlBoxDimensions.height,
-  //};
-
-  //const barsWidth = 30;
-
-  //const zoomBarPosition = {
-  //  x: controlBoxPosition.x - barsWidth - 24,
-  //  y: controlBoxPosition.y,
-  //};
-
-  //const zBarPosition = {
-  //  x: controlBoxPosition.x,
-  //  y: controlBoxPosition.y - barsWidth - 24,
-  //};
-
-  //const zBarDimensions = {
-  //  width: controlBoxDimensions.width,
-  //  height: barsWidth,
-  //};
-
-  //const zoomBarDimensions = {
-  //  width: barsWidth,
-  //  height: controlBoxDimensions.height,
-  //};
-
   return (
     <SpaceViewContext.Provider
       value={{

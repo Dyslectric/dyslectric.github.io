@@ -1,263 +1,166 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
-import owlEyeSvg from "./owleye.svg";
-import "./styles.css";
 import "./index.css";
 import "./assets/orbital-ace-landing-image.png";
-import navArrowLeftSvg from "./assets/stroked-nav-left.svg";
-import navArrowRightSvg from "./assets/stroked-nav-right.svg";
-import rocketSvg from "./assets/rocket.svg";
+import {
+  ScalingNavbar,
+  ScalingNavbarContext,
+} from "./components/ScalingNavbar";
+import owlEyeSvg from "./owleye.svg";
 import { LandingPageBg } from "./LandingPageBg";
+import { createPortal } from "react-dom";
+import ArticleCarousel from "./components/ArticleCarousel";
+import rocketSvg from "./assets/rocket.svg";
 
-export const LandingPage: FC<{}> = () => {
-  // by screens
-  const [scroll, setScroll] = useState(window.scrollY);
-
-  const landingNavAnimation = scroll < 0.93 ? scroll / 0.93 : 1;
-  const leftPadding = 15 - 14 * landingNavAnimation;
-  const imgSize = 20 - 17 * landingNavAnimation;
-  const boxHeight = 100 - 93 * landingNavAnimation;
-  const textSize = 3 - 1.75 * landingNavAnimation;
-  const textLeftMargin = 5 - 4.3 * landingNavAnimation;
-
-  const [spaceModeOn, setSpaceModeOn] = useState(false);
-
-  const onScroll = useCallback(() => {
-    setScroll(window.scrollY / window.innerHeight);
-  }, [window.innerHeight]);
-
-  const onRocketClick = useCallback(() => {
-    if (spaceModeOn) {
-      setSpaceModeOn(false);
-    } else {
-      setSpaceModeOn(true);
-    }
-  }, [spaceModeOn]);
-
-  useEffect(() => {
-    document.addEventListener("scroll", onScroll);
-  });
-
+const NavbarFadingBackground = () => {
+  const navbar = useContext(ScalingNavbarContext);
   return (
-    <>
-      <img
-        src={rocketSvg}
-        style={{
-          position: "fixed",
-          zIndex: 3,
-          width: "1vw",
-          top: "1vw",
-          right: "1vw",
-        }}
-        onMouseDown={onRocketClick}
-      />
-      <div
-        style={{
-          position: "fixed",
-          zIndex: -1,
-          backgroundColor: "rgb(30, 30, 30)",
-          height: `${100 - boxHeight}vh`,
-          bottom: 0,
-          width: window.innerWidth,
-          opacity: 0.3,
-        }}
-      />
-      <div
-        style={{
-          position: "fixed",
-          zIndex: -2,
-          filter: `blur(${8 * landingNavAnimation}px)`,
-        }}
-      >
-        {spaceModeOn ? (
-          <LandingPageBg height={window.innerHeight} />
-        ) : undefined}
-      </div>
-      <div
-        style={{
-          position: "fixed",
-          zIndex: 2,
-          display: "flex",
-          flexDirection: "row",
-          alignSelf: "center",
-          height: `${boxHeight}vh`,
-          width: `100vw`,
-          backgroundColor: spaceModeOn
-            ? `rgba(0, 0, 0, ${landingNavAnimation})`
-            : "#101010",
-        }}
-      >
-        <img
-          src={owlEyeSvg}
-          className=""
-          style={{
-            width: `${imgSize}vw`,
-            height: `${imgSize}vw`,
-            alignSelf: "center",
-            marginLeft: `${leftPadding}vw`,
-          }}
-        />
-        <h1
-          style={{
-            fontSize: `${textSize}vw`,
-            alignSelf: "center",
-            maxWidth: "fit-content",
-            background:
-              "linear-gradient(to right, #903030, #903090, #303090, #309090, #309030, #909030, #903030)",
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            margin: `${textLeftMargin}vw`,
-            padding: "1vw",
-          }}
-        >
-          {" "}
-          [dave@dyslectric ~]{" "}
-        </h1>
-      </div>
-      <div
-        style={{
-          width: "100vw",
-          height: `100vh`,
-          //backgroundColor: "#000000",
-        }}
-      ></div>
-    </>
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: `rgba(10, 10, 10, ${navbar.animation})`,
+        borderBottomWidth: "1.5px",
+        borderBottomColor: `rgba(96, 96, 96, ${navbar.animation})`,
+      }}
+    ></div>
   );
 };
 
-export interface ArticleCarouselProps {
-  id: string;
+const NavbarLogo = () => {
+  const navbar = useContext(ScalingNavbarContext);
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        alignItems: "center",
+        display: "flex",
+        height: "100%",
+        width: "100%",
+      }}
+    >
+      <img
+        src={owlEyeSvg}
+        className=""
+        style={{
+          height: `${30 - navbar.animation * 25}vh`,
+          marginLeft: `${28 - navbar.animation * 27}vw`,
+        }}
+      />
+      <h1
+        style={{
+          fontSize: `${2 - navbar.animation}vw`,
+          maxWidth: "fit-content",
+          background:
+            "linear-gradient(to right, #903030, #903090, #303090, #309090, #309030, #909030, #903030)",
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          margin: `1vw`,
+          padding: "1vw",
+        }}
+      >
+        {" "}
+        [dave@dyslectric ~]{" "}
+      </h1>
+    </div>
+  );
+};
+
+export interface NavbarProps {
+  height: number;
+  animation: number;
 }
 
-export const ArticleCarousel: FC<ArticleCarouselProps> = ({ id }) => {
-  const element = document.getElementById(id);
-  const children = element ? [...element.children] : [];
-  const carouselId = `${id}-carousel`;
+export const Navbar: FC<NavbarProps> = ({ height, animation }) => {
+  return (
+    <ScalingNavbar size={height} animation={animation}>
+      <NavbarFadingBackground />
+      <NavbarLogo />
+    </ScalingNavbar>
+  );
+};
+
+export interface SpaceBackgroundProps {
+  animation: number;
+}
+
+function App() {
+  const [scroll, setScroll] = useState(window.scrollY);
+  const [spacemode, setSpacemode] = useState(false);
+
+  const navbarHeight = 0.07;
 
   useEffect(() => {
-    if (element) element.style.setProperty("display", "none");
+    document.addEventListener("scroll", () => setScroll(window.scrollY));
   });
 
-  const scrollLeft = useCallback(() => {
-    const element = document.querySelector(
-      `#${carouselId} .article-carousel-inner`,
-    );
-    if (element) element.scrollTo(element.scrollLeft - 460, element.scrollTop);
-  }, []);
-  const scrollRight = useCallback(() => {
-    const element = document.querySelector(
-      `#${carouselId} .article-carousel-inner`,
-    );
-    if (element) element.scrollTo(element.scrollLeft + 460, element.scrollTop);
-  }, []);
+  const scrollInScreenHeights = useMemo(
+    () => scroll / window.innerHeight,
+    [scroll, window.innerHeight],
+  );
+
+  const clampedScroll = useMemo(
+    () => Math.min(scrollInScreenHeights, 1 - navbarHeight),
+    [scrollInScreenHeights, navbarHeight],
+  );
+
+  const navbarAnimation = useMemo(
+    () => clampedScroll / (1 - navbarHeight),
+    [clampedScroll, navbarHeight],
+  );
+
+  const carousels = useMemo(
+    () =>
+      Array.from(document.querySelectorAll("ul.article-carousel")).map(
+        (element, index) => {
+          return (
+            <ArticleCarousel element={element as HTMLElement} key={index} />
+          );
+        },
+      ),
+    [],
+  );
 
   return (
     <>
-      <div id={carouselId} className="article-carousel" style={{}}>
-        <div
-          className="article-carousel-controls"
+      {createPortal(
+        <img
+          src={rocketSvg}
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100vw",
-            position: "absolute",
-            zIndex: 1,
-            paddingLeft: "2vw",
-            paddingRight: "2vw",
+            width: "100%",
+            height: "100%",
           }}
-        >
-          <img
-            src={navArrowLeftSvg}
-            className="carousel-nav-arrow"
-            onMouseDown={scrollLeft}
-          />
-          <img
-            src={navArrowRightSvg}
-            className="carousel-nav-arrow"
-            onMouseDown={scrollRight}
-          />
-        </div>
-        <div
-          className="article-carousel-inner"
-          style={{
-            scrollBehavior: "smooth",
-            display: "grid",
-            position: "relative",
-            gridGap: 60,
-            paddingLeft: "6vw",
-            paddingRight: "6vw",
-            gridTemplateColumns: "repeat(auto-fill,400px)",
-            gridAutoFlow: "column",
-            gridAutoColumns: 400,
-            overflowX: "hidden",
-            mask: "linear-gradient(to right, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2%, rgba(0,0,0,1) 6%, rgba(0,0,0, 1) 94%, rgba(0,0,0, 0) 98%)",
+          onClick={() => {
+            if (spacemode) {
+              setSpacemode(false);
+            } else {
+              setSpacemode(true);
+            }
           }}
-        >
-          {children.map((child, index) => {
-            const image = child.getElementsByTagName("img").item(0);
-            const title = child.getElementsByTagName("h1").item(0);
-            const description = child.getElementsByTagName("p").item(0);
-            const imageSrc = image ? image.getAttribute("src") : undefined;
+        />,
+        document.getElementById("spacemode-button")!,
+      )}
+      {createPortal(
+        spacemode ? <LandingPageBg animation={navbarAnimation} /> : undefined,
+        document.getElementById("space-background")!,
+      )}
 
-            return (
-              <div
-                key={index}
-                className="article"
-                style={{
-                  display: "inline-block",
-                }}
-              >
-                <img
-                  className="article-image"
-                  src={imageSrc ? imageSrc : undefined}
-                  style={{
-                    objectFit: "cover",
-                    width: 400,
-                    height: 230,
-                    borderRadius: "0.3in 0.3in 0in 0in",
-                  }}
-                />
-                <div className="article-textbox">
-                  <h1 className="article-title text-wrap text-2xl">
-                    {title ? title.innerText : ""}
-                  </h1>
-                  <p
-                    className="article-description text-wrap"
-                    style={{ paddingTop: 0 }}
-                  >
-                    {description ? description.innerText : ""}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      {createPortal(
+        <Navbar height={navbarHeight} animation={navbarAnimation} />,
+        document.getElementById("navbar")!,
+      )}
+
+      {carousels}
     </>
   );
-};
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <LandingPage />
+    <App />
   </React.StrictMode>,
 );
-
-ReactDOM.createRoot(
-  document.getElementById("orbital-ace-article-carousel")!,
-).render(
-  <React.StrictMode>
-    <ArticleCarousel id={"orbital-ace-articles"} />
-  </React.StrictMode>,
-);
-
-ReactDOM.createRoot(
-  document.getElementById("ls-techs-article-carousel")!,
-).render(
-  <React.StrictMode>
-    <ArticleCarousel id={"ls-techs-articles"} />
-  </React.StrictMode>,
-);
-
-//const orbAceArticlesDiv = document.getElementById("orbital-ace-articles-area");

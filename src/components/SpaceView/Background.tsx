@@ -48,6 +48,8 @@ export const SpaceBackgroundLayer: FC<SpaceBackgroundLayerProps> = ({
   const distance = camera.z - z;
   const layerScale = ((scale ? scale : 1) / distance) * camera.zoom;
 
+  const [scroll, setScroll] = useState(window.scrollY);
+
   useEffect(() => {
     if (maskSprite) {
       maskSprite.anchor.set(0.5);
@@ -79,12 +81,13 @@ export const SpaceBackgroundLayer: FC<SpaceBackgroundLayerProps> = ({
       setMouseX(event.clientX);
       setMouseY(event.clientY);
     });
+    document.addEventListener("scroll", () => setScroll(window.scrollY));
   }, []);
 
   useEffect(() => {
-    camera.setY(100 + mouseY * 3 + window.scrollY * 3);
+    camera.setY(100 + mouseY * 3 + scroll * 3);
     camera.setX(100 + mouseX * 3);
-  }, [mouseX, mouseY, window.scrollY]);
+  }, [mouseX, mouseY, scroll]);
 
   return (
     <ContainerComponent x={viewport.width / 2} y={viewport.height / 2}>
